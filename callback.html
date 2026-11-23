@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>PB Hub — Ritorno autorizzazione</title>
+<style>
+  :root { color-scheme: light dark; }
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    margin: 0 auto; padding: 2.5rem 1.25rem 4rem; max-width: 34rem;
+    font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #1a1a1a; background: #fdfdfc;
+  }
+  h1 { font-size: 1.35rem; line-height: 1.3; margin: 0 0 .5rem; letter-spacing: -.01em; }
+  p { margin: 0 0 1rem; }
+  .muted { color: #6b6b6b; font-size: .9rem; }
+  .btn {
+    display: block; width: 100%; text-align: center; text-decoration: none;
+    background: #0b5d3b; color: #fff; font-size: 1.05rem; font-weight: 600;
+    padding: .9rem 1rem; border-radius: 10px; border: 0; cursor: pointer;
+    margin: 1.5rem 0 .5rem;
+  }
+  .btn:active { background: #094a2f; }
+  .panel {
+    margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #e3e1dc;
+  }
+  textarea {
+    width: 100%; min-height: 6.5rem; resize: vertical; margin: .5rem 0;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: .82rem; line-height: 1.45; padding: .6rem;
+    border: 1px solid #d6d3cd; border-radius: 8px;
+    background: #f7f6f3; color: inherit;
+  }
+  .copy {
+    background: transparent; border: 1px solid #d6d3cd; border-radius: 8px;
+    padding: .5rem .9rem; font-size: .9rem; cursor: pointer; color: inherit;
+  }
+  .err { color: #a31b1b; font-weight: 600; }
+  @media (prefers-color-scheme: dark) {
+    body { color: #e8e6e3; background: #17181a; }
+    .muted { color: #9b9892; }
+    .panel { border-top-color: #2c2e31; }
+    textarea { background: #202225; border-color: #3a3d41; }
+    .copy { border-color: #3a3d41; }
+    .err { color: #ff8a8a; }
+  }
+</style>
+</head>
+<body>
+<h1 id="title">Autorizzazione completata</h1>
+<p id="lead" class="muted">Torna a PB Hub per completare il collegamento del conto.</p>
+
+<a id="open" class="btn" href="#">Apri PB Hub</a>
+<p class="muted" id="auto"></p>
+
+<div class="panel">
+  <p class="muted">
+    Se l'app non si apre da sola, copia l'indirizzo qui sotto e incollalo nella schermata
+    di setup di PB Hub.
+  </p>
+  <textarea id="url" readonly spellcheck="false"></textarea>
+  <button class="copy" id="copy" type="button">Copia indirizzo</button>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var APP_URL = 'pbhub://finance/auth-callback';
+
+  // Enable Banking usa la query string; alcuni ASPSP rimandano nel fragment.
+  var params = window.location.search;
+  if (!params || params === '?') {
+    var h = window.location.hash.replace(/^#/, '');
+    params = h ? '?' + h : '';
+  }
+
+  var target = APP_URL + params;
+  var q = new URLSearchParams(params);
+
+  document.getElementById('url').value = window.location.href;
+  document.getElementById('open').setAttribute('href', target);
+
+  // Esito negativo: niente redirect automatico, l'utente deve poter leggere l'errore.
+  var error = q.get('error');
+  if (error) {
+    var t = document.getElementById('title');
+    t.textContent = 'Autorizzazione non riuscita';
+    t.className = 'err';
+    document.getElementById('lead').textContent =
+      q.get('error_description') || 'La banca ha interrotto il processo di autorizzazione.';
+    document.getElementById('auto').textContent = '';
+  } else if (q.get('code')) {
+    // Il tentativo automatico è ritardato: su Android la navigazione verso uno schema
+    // custom senza gesto dell'utente viene spesso bloccata, e serve comunque il pulsante.
+    document.getElementById('auto').textContent = 'Apertura automatica in corso…';
+    window.setTimeout(function () {
+      window.location.href = target;
+      window.setTimeout(function () {
+        document.getElementById('auto').textContent =
+          "Se non è successo nulla, usa il pulsante qui sopra o copia l'indirizzo.";
+      }, 1500);
+    }, 1800);
+  } else {
+    document.getElementById('title').textContent = 'Nessun codice di autorizzazione';
+    document.getElementById('lead').textContent =
+      'Questa pagina va aperta solo al termine del processo di autorizzazione della banca.';
+  }
+
+  document.getElementById('copy').addEventListener('click', function () {
+    var box = document.getElementById('url');
+    var done = function () {
+      var b = document.getElementById('copy');
+      b.textContent = 'Copiato';
+      window.setTimeout(function () { b.textContent = 'Copia indirizzo'; }, 1800);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(box.value).then(done, function () {
+        box.select(); done();
+      });
+    } else {
+      box.select();
+      try { document.execCommand('copy'); } catch (e) { /* selezione manuale */ }
+      done();
+    }
+  });
+})();
+</script>
+</body>
+</html>

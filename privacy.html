@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PB Hub — Informativa sulla privacy</title>
+<style>
+  :root { color-scheme: light dark; }
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    margin: 0 auto; padding: 2.5rem 1.25rem 4rem; max-width: 46rem;
+    font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #1a1a1a; background: #fdfdfc;
+  }
+  h1 { font-size: 1.6rem; line-height: 1.25; margin: 0 0 .35rem; letter-spacing: -.01em; }
+  h2 { font-size: 1.1rem; margin: 2.25rem 0 .6rem; letter-spacing: -.005em; }
+  .meta { color: #6b6b6b; font-size: .875rem; margin: 0 0 2rem; }
+  ul { padding-left: 1.25rem; }
+  li { margin: .3rem 0; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .9em;
+         background: #f0efec; padding: .1rem .35rem; border-radius: 3px; }
+  a { color: #0b5d3b; }
+  footer { margin-top: 3rem; padding-top: 1.25rem; border-top: 1px solid #e3e1dc;
+           color: #6b6b6b; font-size: .875rem; }
+  @media (prefers-color-scheme: dark) {
+    body { color: #e8e6e3; background: #17181a; }
+    .meta, footer { color: #9b9892; }
+    code { background: #26282b; }
+    a { color: #5fcf9b; }
+    footer { border-top-color: #2c2e31; }
+  }
+</style>
+</head>
+<body>
+<h1>Informativa sulla privacy</h1>
+<p class="meta">PB Hub · aggiornata al 23 novembre 2026</p>
+
+<h2>Che cos'è PB Hub</h2>
+<p>
+  PB Hub è un'applicazione Android <strong>personale</strong>, sviluppata e usata dal solo autore
+  sul proprio dispositivo. Non è distribuita su store pubblici, non ha utenti terzi e non viene
+  offerta come servizio a nessuno.
+</p>
+
+<h2>Nessun server, nessuna raccolta</h2>
+<p>
+  L'applicazione <strong>non ha un backend</strong>. Non esiste alcun server gestito dall'autore che
+  riceva, memorizzi o elabori dati. Nulla viene trasmesso all'autore, a società terze, a circuiti
+  pubblicitari o a servizi di analisi. Non vengono usati cookie, identificatori pubblicitari,
+  SDK di tracciamento o strumenti di profilazione.
+</p>
+
+<h2>Quali dati vengono trattati</h2>
+<p>
+  L'applicazione accede, tramite l'API di open banking di Enable Banking, ai dati dei
+  <strong>conti correnti intestati all'autore</strong> e da lui stesso esplicitamente collegati:
+</p>
+<ul>
+  <li>saldo e identificativi del conto (IBAN, valuta, intestazione);</li>
+  <li>movimenti contabili: data, importo, controparte e causale;</li>
+  <li>stato e scadenza del consenso PSD2.</li>
+</ul>
+<p>
+  L'accesso è in <strong>sola lettura</strong>: l'applicazione non dispone e non può disporre pagamenti,
+  bonifici o alcuna operazione sul conto.
+</p>
+
+<h2>Dove vengono conservati</h2>
+<ul>
+  <li>
+    I dati di conto e movimenti risiedono <strong>esclusivamente sul dispositivo</strong>, in un
+    database SQLite locale, all'interno dell'area privata dell'applicazione.
+  </li>
+  <li>
+    La chiave privata RSA usata per firmare le chiamate API, l'identificativo dell'applicazione
+    e l'identificativo di sessione sono conservati nell'<strong>Android Keystore</strong>
+    tramite <code>expo-secure-store</code>, protetti dal sistema operativo.
+  </li>
+  <li>
+    L'accesso all'applicazione è subordinato ad <strong>autenticazione biometrica</strong>
+    (impronta digitale, con ripiego sul PIN o sulla sequenza di sblocco del dispositivo).
+  </li>
+  <li>
+    Gli screenshot e l'anteprima nella schermata delle app recenti sono disabilitati
+    (<code>FLAG_SECURE</code>).
+  </li>
+</ul>
+
+<h2>Conservazione e cancellazione</h2>
+<p>
+  I dati restano sul dispositivo finché l'autore non disinstalla l'applicazione o ne cancella i dati
+  dalle impostazioni di Android. Entrambe le operazioni rimuovono integralmente database e chiavi.
+  Il consenso PSD2 può essere revocato in qualsiasi momento dall'home banking o lasciato scadere:
+  la durata massima prevista dalla normativa è di 180 giorni.
+</p>
+
+<h2>Ruolo di Enable Banking</h2>
+<p>
+  L'accesso ai dati di conto avviene tramite <a href="https://enablebanking.com/">Enable Banking</a>,
+  che opera come prestatore di servizi di informazione sui conti ai sensi della direttiva PSD2.
+  Al trattamento effettuato da Enable Banking e dall'istituto bancario si applicano le rispettive
+  informative sulla privacy, che non dipendono da questa applicazione.
+</p>
+
+<h2>Contatti</h2>
+<p>
+  Per qualsiasi questione relativa alla protezione dei dati:
+  <a href="mailto:paolo.barzan@gmail.com">paolo.barzan@gmail.com</a>
+</p>
+
+<footer>
+  PB Hub — applicazione personale, non commerciale ·
+  <a href="./terms.html">Termini di utilizzo</a>
+</footer>
+</body>
+</html>
